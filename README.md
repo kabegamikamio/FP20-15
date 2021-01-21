@@ -4,8 +4,8 @@
 ==========
 
 Updates
-  2021/1/21 READMEファイル作成
-  2021/1/21 img.hとcircle_gen.cを仮説
+  -- 2021/1/21 READMEファイル作成
+  -- 2021/1/21 img.hとcircle_gen.cを仮説
 
 ==========
 
