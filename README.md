@@ -16,5 +16,5 @@ Updates
 - circle_gen.c
 円のアニメーションを生成するC言語ファイル。教科書のコピペ。
 
--sample.c
+-　sample.c
 各図形のピクセルを設定するC言語ファイル．Rubyからの移植(Thanks by Izurina)
