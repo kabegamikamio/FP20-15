@@ -6,6 +6,7 @@
 Updates
   - 2021/1/21 READMEファイル作成
   - 2021/1/21 img.hとcircle_gen.cを仮説
+  - 2021/1/19 sample.cを追加
 
 ==========
 
@@ -14,3 +15,6 @@ Updates
 
 - circle_gen.c
 円のアニメーションを生成するC言語ファイル。教科書のコピペ。
+
+- sample.c
+各図形のピクセルを設定するC言語ファイル．Rubyからの移植(Thanks by Izurina)
