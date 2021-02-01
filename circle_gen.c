@@ -18,7 +18,7 @@ void img_clear(void){
 
 //Generate image file
 void img_write(void){
-    sprintf(fname, "img%04d.ppm", filecnt++);
+    sprintf(fname, ".\\image\\img%04d.ppm", filecnt++);
     FILE *f = fopen(fname, "wb");
     if(f == NULL){
         fprintf(stderr, "can't open %s\n", fname);
@@ -47,6 +47,10 @@ void img_fillcircle(struct color c, double x, double y, double r){
             }
         }
     }
+}
+
+void collision(){
+    
 }
 
 int main(void){
