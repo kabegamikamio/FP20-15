@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "img.h"
 
 static unsigned char buf[HEIGHT][WIDTH][3];
@@ -18,7 +19,7 @@ void img_clear(void){
 
 //Generate image file
 void img_write(void){
-    sprintf(fname, "img%04d.ppm", filecnt++);
+    sprintf(fname, ".\\image\\img%04d.ppm", filecnt++);
     FILE *f = fopen(fname, "wb");
     if(f == NULL){
         fprintf(stderr, "can't open %s\n", fname);
@@ -47,6 +48,26 @@ void img_fillcircle(struct color c, double x, double y, double r){
             }
         }
     }
+}
+
+double dot(struct vector a, struct vector b){
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+struct vector product(struct vector a, struct vector b){
+    struct vector ret;
+        ret.x = a.y * b.z - a.z * b.y,
+        ret.y = a.z * b.x - a.x * b.z,
+        ret.z = a.x * b.y - a.y * b.x;
+    return ret;
+}
+
+struct vector normalize(struct vector a){
+    double norm = sqrt(pow(a.x, 2) + pow(a.y, 2) + pow(a.z, 2));
+    a.x = a.x / norm,
+    a.y = a.y / norm,
+    a.z = a.z / norm;
+    return a;
 }
 
 int main(void){

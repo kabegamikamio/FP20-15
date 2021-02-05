@@ -1,6 +1,6 @@
 //This file is defining API
-#define WIDTH 300
-#define HEIGHT 200
+#define WIDTH 1920
+#define HEIGHT 1080
 struct color{
     unsigned char r, g, b;
 };
