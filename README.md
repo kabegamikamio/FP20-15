@@ -15,6 +15,7 @@ Updates
   - 2021/1/21 READMEファイル作成
   - 2021/1/21 img.hとcircle_gen.cを仮説
   - 2021/1/19 sample.cを追加
+  - 2021/2/8  rotationとreflectionを追加
 
 ==========
 

@@ -70,6 +70,30 @@ struct vector normalize(struct vector a){
     return a;
 }
 
+struct vector rotation(struct vector a, double theta, double phi){
+    struct vector xz;
+        xz.x =   a.x * cos(theta) + a.y * sin(theta);
+        xz.y = - a.x * sin(theta) + a.y * cos(theta);
+        xz.z = a.z;
+    struct vector rotation;
+        rotation.x = xz.x * cos(phi) - xz.z * sin(phi);
+        rotation.y = xz.y;
+        rotation.z = xz.x * sin(phi) + xz.z * cos(phi);
+    return rotation;
+}
+
+struct vector reflect(struct vector a, struct vector p, struct vector q){
+    struct vector N;
+    N = normlize(product(p,q));
+    double mag;
+        mag = dot(a,N);
+    struct vector reflect;
+        reflect.x = a.x + 2 * mag * N.x;
+        reflect.y = a.y + 2 * mag * N.y;
+        reflect.z = a.z + 2 * mag * N.z;
+    return reflect;
+}
+
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
