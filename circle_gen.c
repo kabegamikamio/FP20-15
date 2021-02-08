@@ -70,6 +70,23 @@ struct vector normalize(struct vector a){
     return a;
 }
 
+struct vector rotation(struct vector a, double theta, double phi){
+double X1, Y1, Z1;
+    X1 =   a.x * cos(theta) + a.y * sin(theta);
+    Y1 = - a.x * sin(theta) + a.y * cos(theta);
+    Z1 = a.z;
+
+double X2, Y2, Z2;
+    X2 = X1 * cos(phi) - Z1 * sin(phi);
+    Y2 = Y1;
+    Z2 = X1 * sin(phi) + Z1 * cos(phi);
+
+    a.x = X2;
+    a.y = Y2;
+    a.z = Z2;
+    return a;
+};
+
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
