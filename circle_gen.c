@@ -71,21 +71,28 @@ struct vector normalize(struct vector a){
 }
 
 struct vector rotation(struct vector a, double theta, double phi){
-double X1, Y1, Z1;
-    X1 =   a.x * cos(theta) + a.y * sin(theta);
-    Y1 = - a.x * sin(theta) + a.y * cos(theta);
-    Z1 = a.z;
+    struct vector xz;
+        xz.x =   a.x * cos(theta) + a.y * sin(theta);
+        xz.y = - a.x * sin(theta) + a.y * cos(theta);
+        xz.z = a.z;
+    struct vector rot;
+        rot.x = xz.x * cos(phi) - xz.z * sin(phi);
+        rot.y = xz.y;
+        rot.z = xz.x * sin(phi) + xz.z * cos(phi);
+    return rot;
+}
 
-double X2, Y2, Z2;
-    X2 = X1 * cos(phi) - Z1 * sin(phi);
-    Y2 = Y1;
-    Z2 = X1 * sin(phi) + Z1 * cos(phi);
-
-    a.x = X2;
-    a.y = Y2;
-    a.z = Z2;
-    return a;
-};
+struct vector reflect(struct vector a, struct vector p, struct vector q){
+    struct vector N;
+    N = normlize(product(p,q));
+    double mag;
+        mag = dot(a,N);
+    struct vector ref;
+        ref.x = a.x + 2 * mag * N.x;
+        ref.y = a.y + 2 * mag * N.y;
+        ref.z = a.z + 2 * mag * N.z;
+    return ref;
+}
 
 int main(void){
     struct color c1 = {30, 255, 0};
