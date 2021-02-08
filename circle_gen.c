@@ -75,11 +75,11 @@ struct vector rotation(struct vector a, double theta, double phi){
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
         xz.y = - a.x * sin(theta) + a.y * cos(theta);
         xz.z = a.z;
-    struct vector rot;
+    struct vector rotation;
         rot.x = xz.x * cos(phi) - xz.z * sin(phi);
         rot.y = xz.y;
         rot.z = xz.x * sin(phi) + xz.z * cos(phi);
-    return rot;
+    return rotation;
 }
 
 struct vector reflect(struct vector a, struct vector p, struct vector q){
@@ -87,11 +87,11 @@ struct vector reflect(struct vector a, struct vector p, struct vector q){
     N = normlize(product(p,q));
     double mag;
         mag = dot(a,N);
-    struct vector ref;
+    struct vector reflect;
         ref.x = a.x + 2 * mag * N.x;
         ref.y = a.y + 2 * mag * N.y;
         ref.z = a.z + 2 * mag * N.z;
-    return ref;
+    return reflect;
 }
 
 int main(void){
