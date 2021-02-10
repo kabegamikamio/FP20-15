@@ -93,6 +93,7 @@ struct vector reflect(struct vector a, struct vector N){
     return reflect;
 }
 
+
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
