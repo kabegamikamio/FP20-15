@@ -82,7 +82,8 @@ struct vector rotation(struct vector a, double theta, double phi){
     return rotation;
 }
 
-struct vector reflect(struct vector a, struct vector N){
+struct vector reflect(struct vector a, struct vector n){
+    N = normalize(n);
     double mag;
         mag = dot(a,N);
     struct vector reflect;
