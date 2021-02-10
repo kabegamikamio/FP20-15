@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "img.h"
-#include "vector.h"
 
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
