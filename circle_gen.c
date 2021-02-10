@@ -60,7 +60,7 @@ double dott(struct vector *a, struct vector *b){
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-struct vector product(struct vector a, struct vector b){
+struct vector product(struct vector *a, struct vector *b){
     struct vector ret;
         ret.x = a.y * b.z - a.z * b.y,
         ret.y = a.z * b.x - a.x * b.z,
@@ -68,7 +68,7 @@ struct vector product(struct vector a, struct vector b){
     return ret;
 }
 
-struct vector normalize(struct vector a){
+struct vector normalize(struct vector *a){
     double norm = sqrt(pow(a.x, 2) + pow(a.y, 2) + pow(a.z, 2));
     a.x = a.x / norm,
     a.y = a.y / norm,
@@ -76,7 +76,7 @@ struct vector normalize(struct vector a){
     return a;
 }
 
-struct vector rotation(struct vector a, double theta, double phi){
+struct vector rotation(struct vector *a, double theta, double phi){
     struct vector xz;
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
         xz.y = - a.x * sin(theta) + a.y * cos(theta);
@@ -88,7 +88,7 @@ struct vector rotation(struct vector a, double theta, double phi){
     return rotation;
 }
 
-struct vector reflect(struct vector a, struct vector n){
+struct vector reflect(struct vector *a, struct vector *n){
     N = normalize(n);
     double mag;
         mag = dott(a,N);
@@ -99,7 +99,7 @@ struct vector reflect(struct vector a, struct vector n){
     return reflect;
 }
 
-struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
+struct vector cross_point(struct vector *p, struct vector *v, struct vector *q, struct vector *n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
     double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dott(v,n);
@@ -110,7 +110,7 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
-struct vector sphere_hit(struct vector v){
+struct vector sphere_hit(struct vector *v){
     struct vector P = {100, 0, 0};
     double r = 10.0;
     double d = (r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r);
