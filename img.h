@@ -12,7 +12,7 @@ void img_putpixel(struct color c, int x, int y);
 void img_fillcircle(struct color c, double x, double y, double r);
 void img_fillellipse(struct color c, double x, double y, double rx, double ry);
 void img_fillrotellipse(struct color c, double x, double y, double rx, double ry, double theta);
-double dot(struct vector a, struct vector b);
+double dott(struct vector *a, struct vector *b);
 struct vector product(struct vector a, struct vector b);
 struct vector normalize(struct vector a);
 struct vector rotation(struct vector a, double theta, double phi);
