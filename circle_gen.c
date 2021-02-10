@@ -93,7 +93,7 @@ struct vector reflect(struct vector a, struct vector N){
     return reflect;
 }
 
-struct vector cross_point(struct vector p, struct vector v, struct vector q, struct n){
+struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
     double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dot(v,n);
