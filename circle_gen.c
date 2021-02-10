@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include "img.h"
+#include "vector.h"
 
+static int a = 50;
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
@@ -104,9 +106,44 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
+struct vector sphere_hit(struct vector v){
+    struct vector P = {100, 0, 0};
+    double r = 10.0;
+    double d = (r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r);
+    if(d >= 0){
+        double t1 = (v.x * P.x + sqrt((r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t2 = (v.x * P.x - sqrt((r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
+        double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
+        struct vector ret = {v.x*t1, v.y*t1, v.z*t1};
+        if(l2 < l1){
+            ret.x = v.x*t2,
+            ret.y = v.y*t2,
+            ret.z = v.z*t2;
+        }
+    }
+    else struct vector ret = {0, 0, 0};
+    return ret;
+}
+
+void hit_test(void){
+    int i, j;
+    for(i = 0; i < WIDTH; i++){
+        for(j = 0; j < HEIGHT; j++){
+            struct vector v = {a, i - WIDTH/2, j - HEIGHT/2};
+            struct vector c = sphere_hit(v);
+            if(c.x != 0 && c.y != 0 && c.z != 0){
+                buf[j][i][0] = 255, buf[j][i][1] = 0, buf[j][i][2] = 0;
+            }
+        }
+    }
+}
+
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
+    hit_test();
+    /*
     int i;
     for(i = 0; i < 20; i++){
         img_clear();
@@ -118,5 +155,6 @@ int main(void){
         img_fillcircle(c2, 180, 100+i*5, 20-i);
         img_write();
     }
+    */
     return 0;
 }
