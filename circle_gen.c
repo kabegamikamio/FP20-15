@@ -9,6 +9,10 @@ static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
 
+struct vector{
+    double x, y, z;
+};
+
 //White out the image
 void img_clear(void){
     int i, j;
@@ -52,7 +56,7 @@ void img_fillcircle(struct color c, double x, double y, double r){
     }
 }
 
-double dot(struct vector a, struct vector b){
+double dott(struct vector *a, struct vector *b){
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -87,7 +91,7 @@ struct vector rotation(struct vector a, double theta, double phi){
 struct vector reflect(struct vector a, struct vector n){
     N = normalize(n);
     double mag;
-        mag = dot(a,N);
+        mag = dott(a,N);
     struct vector reflect;
         reflect.x = a.x + 2 * mag * N.x;
         reflect.y = a.y + 2 * mag * N.y;
@@ -98,7 +102,7 @@ struct vector reflect(struct vector a, struct vector n){
 struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
-    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dot(v,n);
+    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dott(v,n);
     struct vector cross_point;
         cross_point.x = p.x + t*v.x;
         cross_point.y = p.y + t*v.y;

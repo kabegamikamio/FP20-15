@@ -1,7 +1,4 @@
 //Vector definition
-struct vector{
-    double x, y, z;
-};
 
 double dot(struct vector a, struct vector b);                       //内積
 struct vector product(struct vector a, struct vector b);            //外積
