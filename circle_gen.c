@@ -93,6 +93,17 @@ struct vector reflect(struct vector a, struct vector N){
     return reflect;
 }
 
+struct vector cross_point(struct vector p, struct vector v, struct vector q, struct n){
+    //p,vはそれぞれ直線の一点、方向ベクトル
+    //q,nはそれぞれ平面の一点、法線ベクトル
+    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dot(v,n);
+    struct vector cross_point;
+        cross_point.x = p.x + t*v.x;
+        cross_point.y = p.y + t*v.y;
+        cross_point.z = p.z + t*v.z;
+    return cross_point;
+}
+
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
