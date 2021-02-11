@@ -7,6 +7,7 @@ static int a = 50;
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
+static struct vector light = {20, 0, 50};
 
 //White out the image
 void img_clear(void){
@@ -105,6 +106,17 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
+struct color distance_ray(struct color RGB, struct vector L, struct vector C){ //光線と表面の交点Cと光源Lの距離から明るさを
+    struct color ret = RGB;
+    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 1000;
+    if(dist != 0){
+        ret.r = (unsigned char)((int)RGB.r / pow(dist, 2)), 
+        ret.g = (unsigned char)((int)RGB.g / pow(dist, 2)), 
+        ret.b = (unsigned char)((int)RGB.b / pow(dist, 2));
+    }
+    return ret;
+}
+
 struct vector sphere_hit(struct vector v){
     struct vector P = {20, 0, 0};
     struct vector ret = {0, 0, 0};
@@ -131,12 +143,14 @@ struct vector sphere_hit(struct vector v){
 
 void hit_test(void){
     int i, j;
+    struct color sc = {255, 0, 0};
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
-            struct vector v = {a, i - WIDTH/2, j - HEIGHT/2};
+            struct vector v = {a, i - (WIDTH/2), j - (HEIGHT/2)};
             struct vector c = sphere_hit(v);
             if(c.x == 0 || c.y == 0 || c.z == 0){
-                buf[j][i][0] = 255, buf[j][i][1] = 0, buf[j][i][2] = 0;
+                sc = distance_ray(sc, light, c);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
             }
         }
     }
