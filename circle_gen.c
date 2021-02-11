@@ -77,9 +77,9 @@ struct vector rotation(struct vector a, double theta, double phi){
         xz.y = - a.x * sin(theta) + a.y * cos(theta);
         xz.z = a.z;
         struct vector rot;
-        rot.x = xy.x * cos(phi) - xy.z * sin(phi);
-        rot.y = xy.y;
-        rot.z = xy.x * sin(phi) + xy.z * cos(phi);
+        rot.x = xz.x * cos(phi) - xz.z * sin(phi);
+        rot.y = xz.y;
+        rot.z = xz.x * sin(phi) + xz.z * cos(phi);
     return rot;
 }
 
@@ -109,21 +109,21 @@ struct vector sphere_hit(struct vector v){
     struct vector P = {20, 0, 0};
     struct vector ret = {0, 0, 0};
     double r = 50;
-    double d = (r * r - P.x * P.x)*(v.y * v.y + v.z * v.z) - (v.x * r) * (v.x * r);
+    double d = (r * r - P.x * P.x)*(v.y * v.y + v.z * v.z) - (v.x * r) * (v.x * r); //判別式
     if(d >= 0){
-        double t1 = (v.x * P.x + sqrt((r*r - P.x*P.x)*(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
-        double t2 = (v.x * P.x - sqrt((r*r - P.x*P.x)*(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t1 = (v.x * P.x + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t2 = (v.x * P.x - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
         double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
         if(l2 < l1){
-            ret.x = v.x*t2,
-            ret.y = v.y*t2,
-            ret.z = v.z*t2;
+            ret.x = v.x * t2,
+            ret.y = v.y * t2,
+            ret.z = v.z * t2;
         }
         else if (l2 >= l1){
-            ret.x = v.x*t1,
-            ret.y = v.y*t1,
-            ret.z = v.z*t1;
+            ret.x = v.x * t1,
+            ret.y = v.y * t1,
+            ret.z = v.z * t1;
         }
     }
     return ret;
@@ -135,7 +135,7 @@ void hit_test(void){
         for(j = 0; j < HEIGHT; j++){
             struct vector v = {a, i - WIDTH/2, j - HEIGHT/2};
             struct vector c = sphere_hit(v);
-            if(c.x != 0 && c.y != 0 && c.z != 0){
+            if(c.x == 0 || c.y == 0 || c.z == 0){
                 buf[j][i][0] = 255, buf[j][i][1] = 0, buf[j][i][2] = 0;
             }
         }
