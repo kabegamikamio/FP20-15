@@ -76,14 +76,14 @@ struct vector normalize(struct vector *a){
 }
 
 struct vector rotation(struct vector *a, double theta, double phi){
-    struct vector xz;
-        xz.x =   a.x * cos(theta) + a.y * sin(theta);
-        xz.y = - a.x * sin(theta) + a.y * cos(theta);
-        xz.z = a.z;
+    struct vector xy;
+        xy.x =   a.x * cos(theta) + a.y * sin(theta);
+        xy.y = - a.x * sin(theta) + a.y * cos(theta);
+        xy.z = a.z;
     struct vector rotation;
-        rotation.x = xz.x * cos(phi) - xz.z * sin(phi);
-        rotation.y = xz.y;
-        rotation.z = xz.x * sin(phi) + xz.z * cos(phi);
+        rotation.x = xy.x * cos(phi) - xy.z * sin(phi);
+        rotation.y = xy.y;
+        rotation.z = xy.x * sin(phi) + xy.z * cos(phi);
     return rotation;
 }
 
