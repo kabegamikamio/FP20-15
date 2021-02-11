@@ -71,16 +71,17 @@ struct vector normalize(struct vector a){
     return a;
 }
 
+<<<<<<< HEAD
 struct vector rotation(struct vector a, double theta, double phi){
     struct vector xz;
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
         xz.y = - a.x * sin(theta) + a.y * cos(theta);
         xz.z = a.z;
-    struct vector rotation;
-        rotation.x = xz.x * cos(phi) - xz.z * sin(phi);
-        rotation.y = xz.y;
-        rotation.z = xz.x * sin(phi) + xz.z * cos(phi);
-    return rotation;
+        struct vector rot;
+        rot.x = xy.x * cos(phi) - xy.z * sin(phi);
+        rot.y = xy.y;
+        rot.z = xy.x * sin(phi) + xy.z * cos(phi);
+    return rot;
 }
 
 struct vector reflect(struct vector a, struct vector n){
