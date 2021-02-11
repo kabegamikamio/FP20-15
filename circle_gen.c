@@ -71,7 +71,6 @@ struct vector normalize(struct vector a){
     return a;
 }
 
-<<<<<<< HEAD
 struct vector rotation(struct vector a, double theta, double phi){
     struct vector xz;
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
