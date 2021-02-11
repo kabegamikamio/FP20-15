@@ -8,10 +8,6 @@ static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
 
-struct vector{
-    double x, y, z;
-};
-
 //White out the image
 void img_clear(void){
     int i, j;
@@ -55,11 +51,11 @@ void img_fillcircle(struct color c, double x, double y, double r){
     }
 }
 
-double dott(struct vector *a, struct vector *b){
+double v_dot(struct vector a, struct vector b){
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-struct vector product(struct vector *a, struct vector *b){
+struct vector product(struct vector a, struct vector b){
     struct vector ret;
         ret.x = a.y * b.z - a.z * b.y,
         ret.y = a.z * b.x - a.x * b.z,
@@ -67,7 +63,7 @@ struct vector product(struct vector *a, struct vector *b){
     return ret;
 }
 
-struct vector normalize(struct vector *a){
+struct vector normalize(struct vector a){
     double norm = sqrt(pow(a.x, 2) + pow(a.y, 2) + pow(a.z, 2));
     a.x = a.x / norm,
     a.y = a.y / norm,
@@ -75,7 +71,7 @@ struct vector normalize(struct vector *a){
     return a;
 }
 
-struct vector rotation(struct vector *a, double theta, double phi){
+struct vector rotation(struct vector a, double theta, double phi){
     struct vector xz;
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
         xz.y = - a.x * sin(theta) + a.y * cos(theta);
@@ -87,10 +83,10 @@ struct vector rotation(struct vector *a, double theta, double phi){
     return rotation;
 }
 
-struct vector reflect(struct vector *a, struct vector *n){
-    N = normalize(n);
+struct vector reflect(struct vector a, struct vector n){
+    struct vector N = normalize(n);
     double mag;
-        mag = dott(a,N);
+        mag = v_dot(a,N);
     struct vector reflect;
         reflect.x = a.x + 2 * mag * N.x;
         reflect.y = a.y + 2 * mag * N.y;
@@ -98,10 +94,10 @@ struct vector reflect(struct vector *a, struct vector *n){
     return reflect;
 }
 
-struct vector cross_point(struct vector *p, struct vector *v, struct vector *q, struct vector *n){
+struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
-    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dott(v,n);
+    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/v_dot(v,n);
     struct vector cross_point;
         cross_point.x = p.x + t*v.x;
         cross_point.y = p.y + t*v.y;
@@ -109,23 +105,27 @@ struct vector cross_point(struct vector *p, struct vector *v, struct vector *q, 
     return cross_point;
 }
 
-struct vector sphere_hit(struct vector *v){
-    struct vector P = {100, 0, 0};
-    double r = 10.0;
-    double d = (r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r);
+struct vector sphere_hit(struct vector v){
+    struct vector P = {20, 0, 0};
+    struct vector ret = {0, 0, 0};
+    double r = 50;
+    double d = (r * r - P.x * P.x)*(v.y * v.y + v.z * v.z) - (v.x * r) * (v.x * r);
     if(d >= 0){
-        double t1 = (v.x * P.x + sqrt((r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
-        double t2 = (v.x * P.x - sqrt((r*r - P.x*P.x)(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t1 = (v.x * P.x + sqrt((r*r - P.x*P.x)*(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t2 = (v.x * P.x - sqrt((r*r - P.x*P.x)*(v.y*v.y + v.z*v.z) - (v.x*r)*(v.x*r))) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
         double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
-        struct vector ret = {v.x*t1, v.y*t1, v.z*t1};
         if(l2 < l1){
             ret.x = v.x*t2,
             ret.y = v.y*t2,
             ret.z = v.z*t2;
         }
+        else if (l2 >= l1){
+            ret.x = v.x*t1,
+            ret.y = v.y*t1,
+            ret.z = v.z*t1;
+        }
     }
-    else struct vector ret = {0, 0, 0};
     return ret;
 }
 
@@ -145,7 +145,9 @@ void hit_test(void){
 int main(void){
     struct color c1 = {30, 255, 0};
     struct color c2 = {255, 0, 0};
+    img_clear();
     hit_test();
+    img_write();
     /*
     int i;
     for(i = 0; i < 20; i++){

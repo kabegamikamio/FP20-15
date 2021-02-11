@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "img.h"
 
 static unsigned char buf[HEIGHT][WIDTH][3];
