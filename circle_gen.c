@@ -52,7 +52,7 @@ void img_fillcircle(struct color c, double x, double y, double r){
     }
 }
 
-double v_dot(struct vector a, struct vector b){
+double dot(struct vector a, struct vector b){
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -87,7 +87,7 @@ struct vector rotation(struct vector a, double theta, double phi){
 struct vector reflect(struct vector a, struct vector n){
     struct vector N = normalize(n);
     double mag;
-        mag = v_dot(a,N);
+        mag = dot(a,N);
     struct vector reflect;
         reflect.x = a.x + 2 * mag * N.x;
         reflect.y = a.y + 2 * mag * N.y;
@@ -98,7 +98,7 @@ struct vector reflect(struct vector a, struct vector n){
 struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
-    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/v_dot(v,n);
+    double t = abs(n.x*(p.x-q.x)+n.y*(p.y-q.y)+n.z*(p.z-q.z))/dot(v,n);
     struct vector cross_point;
         cross_point.x = p.x + t*v.x;
         cross_point.y = p.y + t*v.y;
@@ -115,6 +115,28 @@ struct color distance_ray(struct color RGB, struct vector L, struct vector C){ /
         ret.g = (unsigned char)(k * (double)RGB.g / pow(dist, 2)), 
         ret.b = (unsigned char)(k * (double)RGB.b / pow(dist, 2));
     }
+    return ret;
+}
+
+
+/*
+    *****ベクトルは単位ベクトルとして与えること！*****
+    N : 反射表面の法線ベクトル
+    L : 光源の方向ベクトル
+    V : 視点の方向ベクトル
+    Cs : 表面の色(RGB)
+*/
+struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
+    double  kd = 1.0,     //拡散反射係数
+            ks = 0,     //鏡面反射係数
+            ke = 0,     //環境反射係数
+            n = 5,     //鏡面反射の強度係数
+            s = 0.5;      //入射光の強さ
+    double  cosa = -1 * dot(L, N);
+    double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
+    double  C1 = s * kd * cosa + ke,
+            C2 = s * ks * pow(cosb, n) * 255;
+    struct color ret = {C1 * Cs.r + C2, C1 * Cs.g + C2, C1 * Cs.b + C2};
     return ret;
 }
 
@@ -148,9 +170,13 @@ void hit_test(void){
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
             struct vector v = {a, i - (WIDTH/2), j - (HEIGHT/2)};
-            struct vector c = sphere_hit(v);
-            if(c.x == 0 || c.y == 0 || c.z == 0){
-                sc = distance_ray(sc, light, c);
+            struct vector V = normalize(v);
+            struct vector n = sphere_hit(V);
+            struct vector N = normalize(n);
+            struct vector l = {n.x - light.x, n.y - light.y, n.z - light.z};
+            struct vector L = normalize(l);
+            if(N.x != 0 && N.y != 0 && N.z != 0){
+                sc = phong(N, L, V, sc);
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
             }
         }
