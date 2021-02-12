@@ -108,11 +108,12 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
 
 struct color distance_ray(struct color RGB, struct vector L, struct vector C){ //光線と表面の交点Cと光源Lの距離から明るさを
     struct color ret = RGB;
-    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 1000;
+    double k = 2;
+    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 700;
     if(dist != 0){
-        ret.r = (unsigned char)((int)RGB.r / pow(dist, 2)), 
-        ret.g = (unsigned char)((int)RGB.g / pow(dist, 2)), 
-        ret.b = (unsigned char)((int)RGB.b / pow(dist, 2));
+        ret.r = (unsigned char)(k * (double)RGB.r / pow(dist, 2)), 
+        ret.g = (unsigned char)(k * (double)RGB.g / pow(dist, 2)), 
+        ret.b = (unsigned char)(k * (double)RGB.b / pow(dist, 2));
     }
     return ret;
 }
