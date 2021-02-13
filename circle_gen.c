@@ -7,7 +7,7 @@ static int a = 499;
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-static struct vector light = {0, 0, 20};
+static struct vector light = {0, 200, 0};
 
 //White out the image
 void img_clear(void){
@@ -142,7 +142,7 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
             ks = 0.7,     //鏡面反射係数
             ke = 0.3,     //環境反射係数
             n = 10,     //鏡面反射の強度係数
-            s = 1;      //入射光の強さ
+            s = 0.5;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
     double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
     double  C1 = s * kd * cosa + ke,
@@ -209,7 +209,7 @@ void hit_test(void){
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
             if(n0.x != 0 || n0.y != 0 || n0.z != 0){
-                //sc = phong(N, L, V, sc);            //フォンモデルで計算
+                sc = phong(N, L, V, sc);            //フォンモデルで計算
                 //sc = distance_ray(sc, light, n);  //自作モデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
