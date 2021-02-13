@@ -208,8 +208,8 @@ void hit_test(void){
             struct vector L = normalize(l);
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
-            if(n0.x != 0 && n0.y != 0 && n0.z != 0){
-                sc = phong(N, L, V, sc);            //フォンモデルで計算
+            if(n0.x != 0 || n0.y != 0 || n0.z != 0){
+                //sc = phong(N, L, V, sc);            //フォンモデルで計算
                 //sc = distance_ray(sc, light, n);  //自作モデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
