@@ -131,7 +131,7 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
     double  kd = 0.7,     //拡散反射係数
             ks = 0.7,     //鏡面反射係数
             ke = 0.3,     //環境反射係数
-            n = 40,     //鏡面反射の強度係数
+            n = 10,     //鏡面反射の強度係数
             s = 1;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
     double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
@@ -149,11 +149,16 @@ struct vector sphere_hit(struct vector v){
     double r = 500;
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
     double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
+
+    //判別式での判定
+    //d = 0だと交点が見つからないからどこかおかしいのかもしれない…
     if(d >= 0){
         double t1 = (v.x * P.x + v.y * P.y + v.z * P.z + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double t2 = (v.x * P.x + v.y * P.y + v.z * P.z - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
         double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
+
+        //視点からの距離が近い方の交点だけreturnする
         if(l2 < l1){
             ret.x = v.x * t2,
             ret.y = v.y * t2,
@@ -174,25 +179,33 @@ void hit_test(void){
     struct vector P = {1000, 0, 0};
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
+
+            //ベクトルVは視線の方向ベクトル
             struct vector v = {a, i - (WIDTH/2), j - (HEIGHT/2)};
             struct vector V = normalize(v);
+        
+            //ベクトルNは平面の法線ベクトル
+            //N = (視線との交点) - (球心の位置ベクトル)
             struct vector n0 = sphere_hit(V);
             struct vector n = {n0.x - P.x, n0.y - P.y, n0.z - P.z};
             struct vector N = normalize(n);
+
+            //ベクトルLは光線の単位ベクトル
+            //L = (視線との交点) - (光源の位置ベクトル)
             struct vector l = {n0.x - light.x, n0.y - light.y, n0.z - light.z};
             struct vector L = normalize(l);
-            if(N.x != 0 && N.y != 0 && N.z != 0){
-                sc = phong(N, L, V, sc);      //フォンモデルで計算
-                //sc = distance_ray(sc, light, n);
-                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+
+            //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
+            if(n0.x != 0 && n0.y != 0 && n0.z != 0){
+                sc = phong(N, L, V, sc);            //フォンモデルで計算
+                //sc = distance_ray(sc, light, n);  //自作モデルで計算
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
         }
     }
 }
 
 int main(void){
-    struct color c1 = {30, 255, 0};
-    struct color c2 = {255, 0, 0};
     img_clear();
     hit_test();
     img_write();
