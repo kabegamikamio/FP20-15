@@ -1,6 +1,6 @@
 //This file is defining API
-#define WIDTH 320
-#define HEIGHT 180
+#define WIDTH 1920
+#define HEIGHT 1080
 #define DISTANCE 50 //視点から画素面までの距離
 
 struct color{

@@ -3,11 +3,11 @@
 #include <math.h>
 #include "img.h"
 
-static int a = 50;
+static int a = 499;
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-static struct vector light = {20, 0, 50};
+static struct vector light = {0, 0, 20};
 
 //White out the image
 void img_clear(void){
@@ -110,7 +110,7 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
 struct color distance_ray(struct color RGB, struct vector L, struct vector C){ //光線と表面の交点Cと光源Lの距離から明るさを
     struct color ret = RGB;
     double k = 2;
-    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 700;
+    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 100;
     if(dist != 0){
         ret.r = (unsigned char)(k * (double)RGB.r / pow(dist, 2)), 
         ret.g = (unsigned char)(k * (double)RGB.g / pow(dist, 2)), 
@@ -128,11 +128,11 @@ struct color distance_ray(struct color RGB, struct vector L, struct vector C){ /
     Cs : 表面の色(RGB)
 */
 struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
-    double  kd = 1.0,     //拡散反射係数
-            ks = 0,     //鏡面反射係数
-            ke = 0,     //環境反射係数
-            n = 5,     //鏡面反射の強度係数
-            s = 0.5;      //入射光の強さ
+    double  kd = 0.7,     //拡散反射係数
+            ks = 0.7,     //鏡面反射係数
+            ke = 0.3,     //環境反射係数
+            n = 40,     //鏡面反射の強度係数
+            s = 1;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
     double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
     double  C1 = s * kd * cosa + ke,
@@ -141,14 +141,17 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
     return ret;
 }
 
+//球と視線ベクトルの交点を求める関数
+//視線ベクトルvは単位ベクトルとして与える
 struct vector sphere_hit(struct vector v){
-    struct vector P = {20, 0, 0};
+    struct vector P = {1000, 0, 0};
     struct vector ret = {0, 0, 0};
-    double r = 50;
-    double d = (r * r - P.x * P.x)*(v.y * v.y + v.z * v.z) - (v.x * r) * (v.x * r); //判別式
+    double r = 500;
+    double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
+    double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
     if(d >= 0){
-        double t1 = (v.x * P.x + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
-        double t2 = (v.x * P.x - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t1 = (v.x * P.x + v.y * P.y + v.z * P.z + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
+        double t2 = (v.x * P.x + v.y * P.y + v.z * P.z - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
         double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
         if(l2 < l1){
@@ -168,16 +171,19 @@ struct vector sphere_hit(struct vector v){
 void hit_test(void){
     int i, j;
     struct color sc = {255, 0, 0};
+    struct vector P = {1000, 0, 0};
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
             struct vector v = {a, i - (WIDTH/2), j - (HEIGHT/2)};
             struct vector V = normalize(v);
-            struct vector n = sphere_hit(V);
+            struct vector n0 = sphere_hit(V);
+            struct vector n = {n0.x - P.x, n0.y - P.y, n0.z - P.z};
             struct vector N = normalize(n);
-            struct vector l = {n.x - light.x, n.y - light.y, n.z - light.z};
+            struct vector l = {n0.x - light.x, n0.y - light.y, n0.z - light.z};
             struct vector L = normalize(l);
             if(N.x != 0 && N.y != 0 && N.z != 0){
-                sc = phong(N, L, V, sc);
+                sc = phong(N, L, V, sc);      //フォンモデルで計算
+                //sc = distance_ray(sc, light, n);
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
             }
         }
