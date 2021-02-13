@@ -39,6 +39,8 @@ void img_putpixel(struct color c, int x, int y){
     buf[HEIGHT-y-1][x][2] = c.b;
 }
 
+//円を塗りつぶす関数
+//テキストからの丸コピだから不要
 void img_fillcircle(struct color c, double x, double y, double r){
     int imin = (int)(x-r-1), imax = (int)(x+r+1);
     int jmin = (int)(y-r-1), jmax = (int)(y+r+1);
@@ -52,10 +54,12 @@ void img_fillcircle(struct color c, double x, double y, double r){
     }
 }
 
+//内積関数
 double dot(struct vector a, struct vector b){
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+//外積関数
 struct vector product(struct vector a, struct vector b){
     struct vector ret;
         ret.x = a.y * b.z - a.z * b.y,
@@ -64,6 +68,7 @@ struct vector product(struct vector a, struct vector b){
     return ret;
 }
 
+//正規化関数
 struct vector normalize(struct vector a){
     double norm = sqrt(pow(a.x, 2) + pow(a.y, 2) + pow(a.z, 2));
     a.x = a.x / norm,
@@ -72,6 +77,7 @@ struct vector normalize(struct vector a){
     return a;
 }
 
+//位置ベクトルaを回転させる関数
 struct vector rotation(struct vector a, double theta, double phi){
     struct vector xz;
         xz.x =   a.x * cos(theta) + a.y * sin(theta);
@@ -84,6 +90,7 @@ struct vector rotation(struct vector a, double theta, double phi){
     return rot;
 }
 
+//正反射ベクトルを求める関数
 struct vector reflect(struct vector a, struct vector n){
     struct vector N = normalize(n);
     double mag;
@@ -95,6 +102,7 @@ struct vector reflect(struct vector a, struct vector n){
     return reflect;
 }
 
+//あるベクトルと平面の交点を求める関数
 struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n){
     //p,vはそれぞれ直線の一点、方向ベクトル
     //q,nはそれぞれ平面の一点、法線ベクトル
@@ -107,6 +115,8 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
+//自作光学モデル
+//距離の2乗に反比例するモデル
 struct color distance_ray(struct color RGB, struct vector L, struct vector C){ //光線と表面の交点Cと光源Lの距離から明るさを
     struct color ret = RGB;
     double k = 2;
@@ -173,6 +183,8 @@ struct vector sphere_hit(struct vector v){
     return ret;
 }
 
+//光学計算を行わせる関数
+//実際の計算は下請け関数に任せて，呼び出しはこの関数に集約する
 void hit_test(void){
     int i, j;
     struct color sc = {255, 0, 0};
