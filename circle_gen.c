@@ -7,7 +7,8 @@ static int a = 499;
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-static struct vector light = {0, 200, 0};
+struct vector light = {-1000, 2000, 0};
+struct vector P = {1000, 0, 2000};
 
 //White out the image
 void img_clear(void){
@@ -138,9 +139,9 @@ struct color distance_ray(struct color RGB, struct vector L, struct vector C){ /
     Cs : 表面の色(RGB)
 */
 struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
-    double  kd = 0.7,     //拡散反射係数
-            ks = 0.7,     //鏡面反射係数
-            ke = 0.3,     //環境反射係数
+    double  kd = 1,     //拡散反射係数
+            ks = 0.5,     //鏡面反射係数
+            ke = 0.2,     //環境反射係数
             n = 10,     //鏡面反射の強度係数
             s = 0.5;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
@@ -154,7 +155,7 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
 //球と視線ベクトルの交点を求める関数
 //視線ベクトルvは単位ベクトルとして与える
 struct vector sphere_hit(struct vector v){
-    struct vector P = {1000, 0, 0};
+    //struct vector P = {1000, 0, 0};
     struct vector ret = {0, 0, 0};
     double r = 500;
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
@@ -218,9 +219,13 @@ void hit_test(void){
 }
 
 int main(void){
-    img_clear();
-    hit_test();
-    img_write();
+    int i;
+    for(i = 0; i < 100; i++){
+        img_clear();
+        hit_test();
+        img_write();
+        P.z -= 10 * i;
+    }
     /*
     int i;
     for(i = 0; i < 20; i++){
