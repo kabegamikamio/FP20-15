@@ -5,11 +5,22 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
 #include "img.h"
 
 static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
+
+void mkdir_image(void){
+    //カレントディレクトリ直下にディレクトリimageが存在しないときにそれを生成
+    const char *dir_name = "image";
+    struct stat statBuf;
+    if(stat(dir_name, &statBuf)==0); //do nothing
+    else mkdir(dir_name,S_IRUSR|S_IWUSR|S_IXUSR);
+    return 0;
+}
 
 void img_clear(void) {
     int i, j;
