@@ -4,11 +4,10 @@
 #include "img.h"
 
 static int a = -499;
-static int buf[HEIGHT][WIDTH][3];
+static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-struct vector light = {1000, 2000, 0};
-struct vector P = {1000, 0, 100};
+struct vector light = {500, 380, 500};
 
 //White out the image
 void img_clear(void){
@@ -116,7 +115,18 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
-unsigned char color_range()
+//int_colorをcolorに変換する関数
+//ついでに0 ~ 255の間にRGBを直す
+struct color color_range(struct int_color c0){
+    int c[3] = {c0.r, c0.g, c0.b};
+    int i;
+    for(i = 0; i < 3; i++){
+        if(c[i] < 0){c[i] = 0;}
+        else if(c[i] > 255){c[i] = 255;}
+    }
+    struct color ret = {c[0], c[1], c[2]};
+    return ret;
+}
 
 /*
     *****ベクトルは単位ベクトルとして与えること！*****
@@ -130,19 +140,19 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
             ks = 0.5,     //鏡面反射係数
             ke = 0.2,     //環境反射係数
             n = 10,     //鏡面反射の強度係数
-            s = 0.5;      //入射光の強さ
+            s = 1;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
     double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
     double  C1 = s * kd * cosa + ke,
             C2 = s * ks * pow(cosb, n) * 255;
-    struct color ret = {C1 * Cs.r + C2, C1 * Cs.g + C2, C1 * Cs.b + C2};
+    struct int_color C = {C1 * Cs.r + C2, C1 * Cs.g + C2, C1 * Cs.b + C2};
+    struct color ret = color_range(C);
     return ret;
 }
 
 //球と視線ベクトルの交点を求める関数
 //視線ベクトルvは単位ベクトルとして与える
-struct vector sphere_hit(struct vector v){
-    //struct vector P = {1000, 0, 0};
+struct vector sphere_hit(double r, struct vector P, struct vector v){
     struct vector ret = {0, 0, 0};  //返す座標は(0, 0, 0)で初期化，(0, 0, 0)は交点がない時に使う
     double r = 75;
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
@@ -176,7 +186,7 @@ struct vector sphere_hit(struct vector v){
 void hit_test(void){
     int i, j;
     struct color sc0 = {222, 0, 0};
-    struct vector P1 = {1000, 0, 0};
+    struct vector P = {1000, 0, 0};
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
 
@@ -207,11 +217,24 @@ void hit_test(void){
 
 int main(void){
     int i;
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < 20; i++){
+        img_clear();
+        hit_test();
+        img_write();
+        light.y -= 20 * i;
+    }
+    for(i = 0; i < 20; i++){
+        img_clear();
+        hit_test();
+        img_write();
+        light.y += 20 * i;
+    }
+    for(i = 0; i < 20; i++){
         img_clear();
         hit_test();
         img_write();
         P.z -= 10 * i;
+        P.x += 20 * i;
     }
     /*
     int i;
