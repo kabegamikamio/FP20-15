@@ -3,12 +3,12 @@
 #include <math.h>
 #include "img.h"
 
-static int a = 499;
-static unsigned char buf[HEIGHT][WIDTH][3];
+static int a = -499;
+static int buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-struct vector light = {-1000, 2000, 0};
-struct vector P = {1000, 0, 2000};
+struct vector light = {1000, 2000, 0};
+struct vector P = {1000, 0, 100};
 
 //White out the image
 void img_clear(void){
@@ -116,20 +116,7 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
-//自作光学モデル
-//距離の2乗に反比例するモデル
-struct color distance_ray(struct color RGB, struct vector L, struct vector C){ //光線と表面の交点Cと光源Lの距離から明るさを
-    struct color ret = RGB;
-    double k = 2;
-    double dist = sqrt(pow(L.x - C.x, 2) + pow(L.y - C.y, 2) + pow(L.z - C.z, 2)) / 100;
-    if(dist != 0){
-        ret.r = (unsigned char)(k * (double)RGB.r / pow(dist, 2)), 
-        ret.g = (unsigned char)(k * (double)RGB.g / pow(dist, 2)), 
-        ret.b = (unsigned char)(k * (double)RGB.b / pow(dist, 2));
-    }
-    return ret;
-}
-
+unsigned char color_range()
 
 /*
     *****ベクトルは単位ベクトルとして与えること！*****
@@ -156,8 +143,8 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
 //視線ベクトルvは単位ベクトルとして与える
 struct vector sphere_hit(struct vector v){
     //struct vector P = {1000, 0, 0};
-    struct vector ret = {0, 0, 0};
-    double r = 500;
+    struct vector ret = {0, 0, 0};  //返す座標は(0, 0, 0)で初期化，(0, 0, 0)は交点がない時に使う
+    double r = 75;
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
     double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
 
@@ -188,8 +175,8 @@ struct vector sphere_hit(struct vector v){
 //実際の計算は下請け関数に任せて，呼び出しはこの関数に集約する
 void hit_test(void){
     int i, j;
-    struct color sc = {255, 0, 0};
-    struct vector P = {1000, 0, 0};
+    struct color sc0 = {222, 0, 0};
+    struct vector P1 = {1000, 0, 0};
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
 
@@ -210,7 +197,7 @@ void hit_test(void){
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
             if(n0.x != 0 || n0.y != 0 || n0.z != 0){
-                sc = phong(N, L, V, sc);            //フォンモデルで計算
+                struct color sc = phong(N, L, V, sc0);            //フォンモデルで計算
                 //sc = distance_ray(sc, light, n);  //自作モデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
@@ -220,7 +207,7 @@ void hit_test(void){
 
 int main(void){
     int i;
-    for(i = 0; i < 100; i++){
+    for(i = 0; i < 10; i++){
         img_clear();
         hit_test();
         img_write();
