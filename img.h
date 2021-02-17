@@ -15,6 +15,13 @@ struct vector{
     double x, y, z;
 };
 
+extern int a;
+extern struct vector light;
+unsigned char buf[HEIGHT][WIDTH][3];
+
+struct vector P1;   double r1;  struct color c1;
+struct vector P2;   double r2;  struct color c2;
+
 void img_clear(void);
 void img_write(void);
 void img_putpixel(struct color c, int x, int y);
@@ -27,5 +34,6 @@ struct vector normalize(struct vector a);
 struct vector rotation(struct vector a, double theta, double phi);
 struct vector reflect(struct vector a, struct vector n);
 struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n);
-struct vector sphere_hit(struct vector v);
+struct vector sphere_hit(double r, struct vector P, struct vector v);
 void hit_test(void);
+struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs);

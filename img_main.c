@@ -12,12 +12,8 @@
 #include <math.h>
 #include "img.h"
 
-static unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
-static int a = 499;     //視点から画素までの距離
-struct vector light = {-1000, 2000, 0};     //光源の座標
-struct vector P = {1000, 0, 100};   //球の中心座標 あとで消す
 
 //配列bufを白ピクセルですべて埋める関数
 void img_clear(void){
@@ -111,6 +107,41 @@ struct vector cross_point(struct vector p, struct vector v, struct vector q, str
     return cross_point;
 }
 
+//int_colorをcolorに変換する関数
+//ついでに0 ~ 255の間にRGBを直す
+struct color color_range(struct int_color c0){
+    int c[3] = {c0.r, c0.g, c0.b};
+    int i;
+    for(i = 0; i < 3; i++){
+        if(c[i] < 0){c[i] = 0;}
+        else if(c[i] > 255){c[i] = 255;}
+    }
+    struct color ret = {c[0], c[1], c[2]};
+    return ret;
+}
+
+/* 
+    *****ベクトルは単位ベクトルとして与えること！*****
+    N : 反射表面の法線ベクトル
+    L : 光源の方向ベクトル
+    V : 視点の方向ベクトル
+    Cs : 表面の色(RGB)
+*/
+struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
+    double  kd = 1,     //拡散反射係数
+            ks = 0.5,     //鏡面反射係数
+            ke = 0.2,     //環境反射係数
+            n = 10,     //鏡面反射の強度係数
+            s = 1;      //入射光の強さ
+    double  cosa = -1 * dot(L, N);
+    double  cosb = 2 * dot(L, N) * dot(N, V) - dot(L, V);
+    double  C1 = s * kd * cosa + ke,
+            C2 = s * ks * pow(cosb, n) * 255;
+    struct int_color C = {C1 * Cs.r + C2, C1 * Cs.g + C2, C1 * Cs.b + C2};
+    struct color ret = color_range(C);
+    return ret;
+}
+
 //野生の一般main関数
 int main(){
     int i;
@@ -118,7 +149,7 @@ int main(){
         img_clear();
         hit_test();
         img_write();
-        P.z -= 10 * i;
+        P1.z -= 10 * i;
     }
     return 0;
 }
