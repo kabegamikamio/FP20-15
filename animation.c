@@ -5,7 +5,7 @@
 struct vector S = {100,0,50};
 struct vector G = {0,0,100};
 
-struct vector decmov(struct vector S, struct vector G,int length, int frame){
+struct vector decmov(struct vector S, struct vector G, float length, int frame){
     struct vector way;
         way.x = S.x - G.x,
         way.y = S.y - G.y,
@@ -18,7 +18,7 @@ struct vector decmov(struct vector S, struct vector G,int length, int frame){
             return decm;
 }
 
-struct vector kurukuru(struct vector S, double theta ,double phi, int length, int frame){
+struct vector kurukuru(struct vector S, double theta ,double phi, float length, int frame){
     struct vector xy;
         xy.x =   S.x * cos(theta*frame/length) + S.y * sin(theta*frame/length);
         xy.y = - S.x * sin(theta*frame/length) + S.y * cos(theta*frame/length);
@@ -31,7 +31,7 @@ struct vector kurukuru(struct vector S, double theta ,double phi, int length, in
 }
 
 
-struct vector deckuru(struct vector S, double theta ,double phi, int length, int frame){
+struct vector deckuru(struct vector S, double theta ,double phi, float length, int frame){
     double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
     struct vector xy;
         xy.x =   S.x * cos(theta*ratio*frame/length) + S.y * sin(theta*ratio*frame/length);
@@ -43,18 +43,3 @@ struct vector deckuru(struct vector S, double theta ,double phi, int length, int
         deck.z = xy.x * sin(phi*ratio*frame/length) + xy.z * cos(phi*ratio*frame/length);
     return deck;
 }
-/*
-int main(){
-    int i;
-    struct vector S = {0, 0, 100};
-    struct vector G = {0, 0, 0};
-        for(i = 0;i <= 10; i++){
-        img_clear();
-        struct vector Decm = decmov(S, G, 10, i);
-        P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
-        hit_test();
-        img_write();
-        }
-    return 0;
-}
-*/
