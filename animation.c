@@ -75,7 +75,7 @@ struct vector deckuru(struct vector S, struct vector O, double theta ,double phi
         xz.x = xy.x * cos(Phi*ratio*frame/length) - xy.z * sin(Phi*ratio*frame/length);
         xz.y = xy.y;
         xz.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
-    struct deck;
+    struct vector deck;
         deck.x = xz.x +O.x,
         deck.y = xz.y +O.y,
         deck.z = xz.z +O.z;
