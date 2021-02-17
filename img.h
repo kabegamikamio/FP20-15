@@ -39,4 +39,7 @@ void sphere_hit(double r, struct vector P, struct color c);
 void hit_test(void);
 struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs);
 struct vector decmov(struct vector S, struct vector G, float length, int frame);
-struct vector kurukuru(struct vector S, double theta ,double phi, float length, int frame);
+struct vector accmov(struct vector S, struct vector G, float length, int frame);
+struct vector kurukuru(struct vector S, double theta ,double phi, double x, double y, double z, float length, int frame);
+struct vector deckuru(struct vector S, double theta ,double phi, double x, double y, double z, float length, int frame);
+struct vector acckuru(struct vector S, double theta ,double phi, double x, double y, double z, float length, int frame);
