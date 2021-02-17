@@ -18,7 +18,7 @@ struct vector accmov(struct vector S, struct vector G,float length, int frame){
             return accm;
 }
 
-struct vector decmov(struct vector S, struct vector G,float length, int frame){
+struct vector decmov(struct vector S, struct vector G, float length, int frame){
     struct vector way;
         way.x = S.x - G.x,
         way.y = S.y - G.y,
