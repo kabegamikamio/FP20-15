@@ -8,7 +8,7 @@ unsigned char buf[HEIGHT][WIDTH][3];
 static int filecnt = 0;
 static char fname[100];
 struct vector light = {500, 380, 500};
-struct vector P1 = {700, 0, 200};   double r1 = 75; struct color c1 = {255, 0, 0};
+struct vector P1 = {700, 0, 100};   double r1 = 75; struct color c1 = {255, 0, 0};
 
 //White out the image
 void img_clear(void){
@@ -213,26 +213,30 @@ void hit_test(void){
     }
 }
 
+void box(){
+    int i, j;
+    struct color gray = {100, 100, 100};
+    struct vector origin = {0, 0, 0};
+    struct vector nx = {1, 0, 0}, ny = {0, 1, 0}, nz = {0, 0, 1};   //各軸に平行な単位ベクトル．面の法線ベクトルとして使う
+    for(i = 0; i < WIDTH; i++){
+        for(j = 0; j < HEIGHT; j++){
+            struct vector v = {-a, i - WIDTH/2, j - HEIGHT/2};
+            struct vector V = normalize(v);
+            double t = 150 / V.z;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.y * t) <= 300){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, 150 - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+        }
+    }
+}
+
 int main(void){
-    int i;
-    for(i = 0; i < 20; i++){
-        img_clear();
-        hit_test();
-        img_write();
-        light.y -= 20 * i;
-    }
-    for(i = 0; i < 20; i++){
-        img_clear();
-        hit_test();
-        img_write();
-        light.y += 20 * i;
-    }
-    for(i = 0; i < 20; i++){
-        img_clear();
-        hit_test();
-        img_write();
-        P1.z -= 10 * i;
-        P1.x += 20 * i;
-    }
+    img_clear();
+    box();
+    hit_test();
+    img_write();
     return 0;
 }
