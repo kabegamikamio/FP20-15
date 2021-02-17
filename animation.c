@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "circle_gen.h"
+#include "img.h"
 
 struct vector S = {100,0,50};
 struct vector G = {0,0,100};
