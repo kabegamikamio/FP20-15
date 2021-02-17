@@ -213,7 +213,7 @@ void hit_test(void){
     }
 }
 
-void box(){
+void box(void){
     int i, j;
     struct color gray = {100, 100, 100};
     struct color white = {255, 225, 225};

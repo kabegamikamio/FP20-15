@@ -10,11 +10,11 @@ struct vector decmov(struct vector S, struct vector G,int length, int frame){
         way.x = S.x - G.x,
         way.y = S.y - G.y,
         way.z = S.z - G.z;
-        double prog = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
+        double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
             struct vector decm;
-                decm.x = S.x + (prog * way.x),
-                decm.y = S.y + (prog * way.y),
-                decm.z = S.z + (prog * way.z);
+                decm.x = S.x + (ratio * way.x),
+                decm.y = S.y + (ratio * way.y),
+                decm.z = S.z + (ratio * way.z);
             return decm;
 }
 
@@ -32,14 +32,14 @@ struct vector kurukuru(struct vector S, double theta ,double phi, int length, in
 
 
 struct vector deckuru(struct vector S, double theta ,double phi, int length, int frame){
-    double prog = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
+    double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
     struct vector xy;
-        xy.x =   S.x * cos(theta*prog*frame/length) + S.y * sin(theta*prog*frame/length);
-        xy.y = - S.x * sin(theta*prog*frame/length) + S.y * cos(theta*prog*frame/length);
+        xy.x =   S.x * cos(theta*ratio*frame/length) + S.y * sin(theta*ratio*frame/length);
+        xy.y = - S.x * sin(theta*ratio*frame/length) + S.y * cos(theta*ratio*frame/length);
         xy.z = S.z;
         struct vector deck;
-        deck.x = xy.x * cos(phi*prog*frame/length) - xy.z * sin(phi*prog*frame/length);
+        deck.x = xy.x * cos(phi*ratio*frame/length) - xy.z * sin(phi*ratio*frame/length);
         deck.y = xy.y;
-        deck.z = xy.x * sin(phi*prog*frame/length) + xy.z * cos(phi*prog*frame/length);
+        deck.z = xy.x * sin(phi*ratio*frame/length) + xy.z * cos(phi*ratio*frame/length);
     return deck;
 }
