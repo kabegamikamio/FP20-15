@@ -95,6 +95,58 @@ void sphere_hit(double r, struct vector P, struct color c){
     }
 }
 
+void box(void){
+    int i, j;
+    struct color gray = {100, 100, 100};
+    struct color white = {255, 225, 225};
+    struct color wall_color = {50, 75, 155};
+    struct color green = {0, 255, 0};
+    struct color ceiling_color = {51, 50, 101};
+    struct vector origin = {0, 0, 0};
+    struct vector nx = {1, 0, 0}, ny = {0, 1, 0}, nz = {0, 0, 1};   //各軸に平行な単位ベクトル．面の法線ベクトルとして使う
+    for(i = 0; i < WIDTH; i++){
+        for(j = 0; j < HEIGHT; j++){
+            struct vector v = {-a, i - WIDTH/2, j - HEIGHT/2};
+            struct vector V = normalize(v);
+            double t = 150 / V.z;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.y * t) <= 300){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, 150 - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            t = -150 / V.z;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.y * t) <= 300){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, 150 - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, ceiling_color);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            double u = 1000 / V.x;
+            if(fabs(V.z * u) <= 150 && fabs(V.y * u) <= 300){
+                struct vector l = {1000 - light.x, V.y * u - light.y, V.z*u - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, wall_color);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            double k = 300 / V.y;
+            if(fabs(V.z * k) <= 150 && fabs(V.x * k - 500) <= 500){
+                struct vector l = {V.x*k - light.x, 300 - light.y, V.z*k - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, wall_color);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            k = -300 / V.y;
+            if(fabs(V.z * k) <= 150 && fabs(V.x * k - 500) <= 500){
+                struct vector l = {V.x*k - light.x, 300 - light.y, V.z*k - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, wall_color);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+        }
+    }
+}
+
 void hit_test(void){
     sphere_hit(r2, P2, c2);
     sphere_hit(r1, P1, c1);
