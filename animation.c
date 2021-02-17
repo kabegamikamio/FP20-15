@@ -31,13 +31,13 @@ struct vector decmov(struct vector S, struct vector G, float length, int frame){
             return decm;
 }
 
-struct vector kurukuru(struct vector S, double theta ,double phi, double a, double b, double c, float length, int frame){
+struct vector kurukuru(struct vector S, struct vector O, double theta ,double phi, float length, int frame){
     double Theta = theta * M_PI/180;
     double Phi = phi * M_PI/180;
     struct vector S1;
-        S1.x = S.x -a,
-        S1.y = S.y -b,
-        S1.z = S.z -c;
+        S1.x = S.x -O.x,
+        S1.y = S.y -O.y,
+        S1.z = S.z -O.z;
     struct vector xy;
         xy.x =   S1.x * cos(Theta*frame/length) + S1.y * sin(Theta*frame/length);
         xy.y = - S1.x * sin(Theta*frame/length) + S1.y * cos(Theta*frame/length);
@@ -54,14 +54,14 @@ struct vector kurukuru(struct vector S, double theta ,double phi, double a, doub
 }
 
 
-struct vector deckuru(struct vector S, double theta ,double phi, float length, int frame){
+struct vector deckuru(struct vector S, struct vector O, double theta ,double phi, float length, int frame){
     double Theta = theta * M_PI/180;
     double Phi = phi * M_PI/180;
     double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
     struct vector S1;
-        S1.x = S.x -a,
-        S1.y = S.y -b,
-        S1.z = S.z -c;
+        S1.x = S.x -O.x,
+        S1.y = S.y -O.y,
+        S1.z = S.z -O.z;
     struct vector xy;
         xy.x =   S1.x * cos(Theta*ratio*frame/length) + S1.y * sin(Theta*ratio*frame/length);
         xy.y = - S1.x * sin(Theta*ratio*frame/length) + S1.y * cos(Theta*ratio*frame/length);
