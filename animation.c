@@ -7,9 +7,9 @@ struct vector G = {0,0,100};
 
 struct vector decmov(struct vector S, struct vector G,int length, int frame){
     struct vector way;
-        way.x = S.x - G.x,
-        way.y = S.y - G.y,
-        way.z = S.z - G.z;
+        way.x = G.x - S.x,
+        way.y = G.y - S.y,
+        way.z = G.z - S.z;
         double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
             struct vector decm;
                 decm.x = S.x + (ratio * way.x),
