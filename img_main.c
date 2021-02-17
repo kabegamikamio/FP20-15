@@ -147,6 +147,7 @@ int main(){
     int i;
     struct vector S = {750, 50, 100};   //移動の始点
     struct vector G = {750, 100, 0};    //移動の終点
+    struct vector O = {750, 0, 0};      //回転の中心
         for(i = 0;i <= 9; i++){
             img_clear();
             struct vector Decm = decmov(S, G, 9, i);
@@ -156,7 +157,7 @@ int main(){
         }
         for(i = 0;i <= 9; i++){
             img_clear();
-            struct vector Kur = kurukuru(G, 90, 0, 9, i);
+            struct vector Kur = kurukuru(G, O, 90, 0, 9, i);
             P1.x = Kur.x, P1.y = Kur.y, P1.z = Kur.z;
             hit_test();
             img_write();   
