@@ -27,7 +27,7 @@ void img_clear(void){
 
 //配列bufを画像ファイルに写す関数
 void img_write(void){
-    sprintf(fname, ".\\image\\img%04d.ppm", filecnt++);
+    sprintf(fname, "img%04d.ppm", filecnt++);
     FILE *f = fopen(fname, "wb");
     if(f == NULL){
         fprintf(stderr, "can't open %s\n", fname);
