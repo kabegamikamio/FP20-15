@@ -10,7 +10,7 @@ struct vector decmov(struct vector S, struct vector G,int length, int frame){
         way.x = S.x - G.x,
         way.y = S.y - G.y,
         way.z = S.z - G.z;
-        double prog = pow(2,-5 * frame / length);
+        double prog = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
             struct vector dec;
                 dec.x = S.x + (prog * way.x),
                 dec.y = S.y + (prog * way.y),
