@@ -1,27 +1,32 @@
 //This file is defining API
 #define WIDTH 400
 #define HEIGHT 300
-#define DISTANCE 50 //視点から画素面までの距離
 
+//色の構造体
 struct color{
     unsigned char r, g, b;
 };
 
+//int型に変更した色の構造体
+//途中計算で負の値が出る場合はこちらで計算し，最終的にはcolor_range関数でcolor構造体に変換する
 struct int_color{
     int r, g, b;
 };
 
+//ベクトルの構造体
 struct vector{
     double x, y, z;
 };
 
-extern int a;
-extern struct vector light;
-unsigned char buf[HEIGHT][WIDTH][3];
+extern int a;   //画素の位置(x = a)
+extern struct vector light; //光源の座標
+unsigned char buf[HEIGHT][WIDTH][3];    //ピクセルバッファ
 
+//球の諸元のプロトタイプ宣言(グローバル変数として使うため)
 struct vector P1;   double r1;  struct color c1;
 struct vector P2;   double r2;  struct color c2;
 
+//関数のプロトタイプ宣言
 void img_clear(void);
 void img_write(void);
 void img_putpixel(struct color c, int x, int y);
