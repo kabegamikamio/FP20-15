@@ -13,7 +13,7 @@
 #include "img.h"
 
 int a = -499;     //視点から画素までの距離
-struct vector light = {-1000, 2000, 0};     //光源の座標
+struct vector light = {-1000, 2000, 1000};     //光源の座標
 
 //球の中心座標，半径，表面の色
 struct vector P1 = {700, 100, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
