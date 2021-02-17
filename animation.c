@@ -47,9 +47,9 @@ struct vector kurukuru(struct vector S, struct vector O, double theta ,double ph
         xz.y = xy.y;
         xz.z = xy.x * sin(Phi*frame/length) + xy.z * cos(Phi*frame/length);
     struct vector Kur;
-        Kur.x = xz.x + a,
-        Kur.y = xz.y + b,
-        Kur.z = xz.z + c;
+        Kur.x = xz.x + O.x,
+        Kur.y = xz.y + O.y,
+        Kur.z = xz.z + O.z;
     return Kur;
 }
 
@@ -71,20 +71,20 @@ struct vector deckuru(struct vector S, struct vector O, double theta ,double phi
         xz.y = xy.y;
         xz.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
     struct deck;
-        deck.x = xz.x +a,
-        deck.y = xz.y +b,
-        deck.z = xz.z +c;
+        deck.x = xz.x +O.x,
+        deck.y = xz.y +O.y,
+        deck.z = xz.z +O.z;
     return deck;
 }
 
-struct vector acckuru(struct vector S, double theta ,double phi, float length, int frame){
+struct vector acckuru(struct vector S, struct vector O, double theta ,double phi, float length, int frame){
     double Theta = theta * M_PI/180;
     double Phi = phi * M_PI/180;
     double ratio = 1 - pow(2,-5*frame/length) + pow(2,-5)*frame/length;
     struct vector S1;
-        S1.x = S.x -a,
-        S1.y = S.y -b,
-        S1.z = S.z -c;
+        S1.x = S.x -O.x,
+        S1.y = S.y -O.y,
+        S1.z = S.z -O.z;
     struct vector xy;
         xy.x =   S1.x * cos(Theta*ratio*frame/length) + S1.y * sin(Theta*ratio*frame/length);
         xy.y = - S1.x * sin(Theta*ratio*frame/length) + S1.y * cos(Theta*ratio*frame/length);
@@ -94,8 +94,8 @@ struct vector acckuru(struct vector S, double theta ,double phi, float length, i
         xz.y = xy.y;
         xz.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
     struct vector acck;
-        acck.x = xz.x +a,
-        acck.y = xz.y +b,
-        acck.z = xz.z +c,
+        acck.x = xz.x +O.x,
+        acck.y = xz.y +O.y,
+        acck.z = xz.z +O.z,
     return acck;
 }
