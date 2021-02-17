@@ -216,6 +216,7 @@ void hit_test(void){
 void box(){
     int i, j;
     struct color gray = {100, 100, 100};
+    struct color white = {255, 225, 225};
     struct vector origin = {0, 0, 0};
     struct vector nx = {1, 0, 0}, ny = {0, 1, 0}, nz = {0, 0, 1};   //各軸に平行な単位ベクトル．面の法線ベクトルとして使う
     for(i = 0; i < WIDTH; i++){
@@ -227,6 +228,34 @@ void box(){
                 struct vector l = {V.x * t - light.x, V.y * t - light.y, 150 - light.z};
                 struct vector L = normalize(l);
                 struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            t = -150 / V.z;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.y * t) <= 300){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, -150 - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            t = -300 / V.y;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.z * t) <= 150){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, V.z * t - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            t = 300 / V.y;
+            if(fabs(V.x * t - 500) <= 500 && fabs(V.z * t) <= 150){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, V.z * t - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, gray);
+                buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
+            }
+            t = 1000 / V.x;
+            if(fabs(V.z * t) <= 150 && fabs(V.y * t) <= 300){
+                struct vector l = {V.x * t - light.x, V.y * t - light.y, V.z * t - light.z};
+                struct vector L = normalize(l);
+                struct color sc = phong(nz, L, V, white);
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;
             }
         }
