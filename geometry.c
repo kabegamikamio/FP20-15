@@ -98,8 +98,10 @@ void box(void){
     //ピクセルを塗りつぶす部分
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
+            //視線ベクトルを正規化
             struct vector v = {-a, i - WIDTH/2, j - HEIGHT/2};
             struct vector V = normalize(v);
+
             double t = 150 / V.z;
             if(fabs(V.x * t - 500) <= 500 && fabs(V.y * t) <= 300){
                 struct vector l = {V.x * t - light.x, V.y * t - light.y, 150 - light.z};
@@ -139,9 +141,14 @@ void box(void){
     }
 }
 
-//
+//描画の為に図形系関数を一括呼び出し
 void hit_test(void){
     box();
-    sphere_hit(r2, P2, c2);
-    sphere_hit(r1, P1, c1);
+    if(P1.x < P2.x){
+        sphere_hit(r2, P2, c2);
+        sphere_hit(r1, P1, c1);
+    }else{
+        sphere_hit(r1, P1, c1);
+        sphere_hit(r2, P2, c2);
+    }
 }
