@@ -58,14 +58,22 @@ struct vector deckuru(struct vector S, double theta ,double phi, float length, i
     double Theta = theta * M_PI/180;
     double Phi = phi * M_PI/180;
     double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
+    struct vector S1;
+        S1.x = S.x -a,
+        S1.y = S.y -b,
+        S1.z = S.z -c;
     struct vector xy;
-        xy.x =   S.x * cos(Theta*ratio*frame/length) + S.y * sin(Theta*ratio*frame/length);
-        xy.y = - S.x * sin(Theta*ratio*frame/length) + S.y * cos(Theta*ratio*frame/length);
-        xy.z = S.z;
-        struct vector deck;
-        deck.x = xy.x * cos(Phi*ratio*frame/length) - xy.z * sin(Phi*ratio*frame/length);
-        deck.y = xy.y;
-        deck.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
+        xy.x =   S1.x * cos(Theta*ratio*frame/length) + S1.y * sin(Theta*ratio*frame/length);
+        xy.y = - S1.x * sin(Theta*ratio*frame/length) + S1.y * cos(Theta*ratio*frame/length);
+        xy.z = S1.z;
+        struct vector xz;
+        xz.x = xy.x * cos(Phi*ratio*frame/length) - xy.z * sin(Phi*ratio*frame/length);
+        xz.y = xy.y;
+        xz.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
+    struct deck;
+        deck.x = xz.x +a,
+        deck.y = xz.y +b,
+        deck.z = xz.z +c;
     return deck;
 }
 
@@ -73,13 +81,21 @@ struct vector acckuru(struct vector S, double theta ,double phi, float length, i
     double Theta = theta * M_PI/180;
     double Phi = phi * M_PI/180;
     double ratio = 1 - pow(2,-5*frame/length) + pow(2,-5)*frame/length;
+    struct vector S1;
+        S1.x = S.x -a,
+        S1.y = S.y -b,
+        S1.z = S.z -c;
     struct vector xy;
-        xy.x =   S.x * cos(Theta*ratio*frame/length) + S.y * sin(Theta*ratio*frame/length);
-        xy.y = - S.x * sin(Theta*ratio*frame/length) + S.y * cos(Theta*ratio*frame/length);
-        xy.z = S.z;
-        struct vector acck;
-        acck.x = xy.x * cos(Phi*ratio*frame/length) - xy.z * sin(Phi*ratio*frame/length);
-        acck.y = xy.y;
-        acck.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
+        xy.x =   S1.x * cos(Theta*ratio*frame/length) + S1.y * sin(Theta*ratio*frame/length);
+        xy.y = - S1.x * sin(Theta*ratio*frame/length) + S1.y * cos(Theta*ratio*frame/length);
+        xy.z = S1.z;
+    struct vector xz;
+        xz.x = xy.x * cos(Phi*ratio*frame/length) - xy.z * sin(Phi*ratio*frame/length);
+        xz.y = xy.y;
+        xz.z = xy.x * sin(Phi*ratio*frame/length) + xy.z * cos(Phi*ratio*frame/length);
+    struct vector acck;
+        acck.x = xz.x +a,
+        acck.y = xz.y +b,
+        acck.z = xz.z +c,
     return acck;
 }
