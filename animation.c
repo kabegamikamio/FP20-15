@@ -96,6 +96,6 @@ struct vector acckuru(struct vector S, struct vector O, double theta ,double phi
     struct vector acck;
         acck.x = xz.x +O.x,
         acck.y = xz.y +O.y,
-        acck.z = xz.z +O.z,
+        acck.z = xz.z +O.z;
     return acck;
 }
