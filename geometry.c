@@ -145,6 +145,3 @@ void hit_test(void){
     sphere_hit(r2, P2, c2);
     sphere_hit(r1, P1, c1);
 }
-
-//ここに演習問題が入る
-//いや入らない
