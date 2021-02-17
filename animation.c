@@ -43,7 +43,7 @@ struct vector deckuru(struct vector S, double theta ,double phi, int length, int
         deck.z = xy.x * sin(phi*ratio*frame/length) + xy.z * cos(phi*ratio*frame/length);
     return deck;
 }
-
+/*
 int main(){
     int i;
     struct vector S = {0, 0, 100};
@@ -57,3 +57,4 @@ int main(){
         }
     return 0;
 }
+*/

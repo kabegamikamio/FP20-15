@@ -42,7 +42,7 @@ struct vector sphere_cross(double r, struct vector P, struct vector v){
     double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
 
     //判別式での判定
-    //d = 0だと交点が見つからないからどこかおかしいのかもしれない…
+    //double型の誤差も踏まえてd = 0ではなくd >= 0としている
     if(d >= 0){
         double t1 = (v.x * P.x + v.y * P.y + v.z * P.z + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double t2 = (v.x * P.x + v.y * P.y + v.z * P.z - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
@@ -54,8 +54,7 @@ struct vector sphere_cross(double r, struct vector P, struct vector v){
             intersect.x = v.x * t2,
             intersect.y = v.y * t2,
             intersect.z = v.z * t2;
-        }
-        else if (l2 >= l1){
+        }else if (l2 >= l1){
             intersect.x = v.x * t1,
             intersect.y = v.y * t1,
             intersect.z = v.z * t1;
