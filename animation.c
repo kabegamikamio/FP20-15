@@ -7,14 +7,14 @@ struct vector G = {0,0,100};
 
 struct vector decmov(struct vector S, struct vector G,int length, int frame){
     struct vector way;
-        way.x = G.x - S.x,
-        way.y = G.y - S.y,
-        way.z = G.z - S.z;
+        way.x = S.x - G.x,
+        way.y = S.y - G.y,
+        way.z = S.z - G.z;
         double ratio = pow(2,-5*frame/length) - pow(2,-5)*frame/length;
             struct vector decm;
-                decm.x = S.x + (ratio * way.x),
-                decm.y = S.y + (ratio * way.y),
-                decm.z = S.z + (ratio * way.z);
+                decm.x = G.x + (ratio * way.x),
+                decm.y = G.y + (ratio * way.y),
+                decm.z = G.z + (ratio * way.z);
             return decm;
 }
 
