@@ -149,14 +149,14 @@ int main(){
     struct vector G = {0, 0, 0};
         for(i = 0;i <= 9; i++){
             img_clear();
-            struct vector Decm = decmov(S, G, 10, i);
+            struct vector Decm = decmov(S, G, 9, i);
             P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
             hit_test();
             img_write();
         }
         for(i = 0;i <= 9; i++){
             img_clear();
-            struct vector Kur = kurukuru(S, 90, 90, 10, i);
+            struct vector Kur = kurukuru(S, 90, 90, 9, i);
             P1.x = Kur.x, P1.y = Kur.y, P1.z = Kur.z;
             hit_test();
             img_write();   
