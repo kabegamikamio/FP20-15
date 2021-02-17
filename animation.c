@@ -43,3 +43,17 @@ struct vector deckuru(struct vector S, double theta ,double phi, int length, int
         deck.z = xy.x * sin(phi*ratio*frame/length) + xy.z * cos(phi*ratio*frame/length);
     return deck;
 }
+
+int main(){
+    int i;
+    struct vector S = {0, 0, 100};
+    struct vector G = {0, 0, 0};
+        for(i = 0;i <= 10; i++){
+        img_clear();
+        struct vector Decm = decmov(S, G, 10, i);
+        P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
+        hit_test();
+        img_write();
+        }
+    return 0;
+}
