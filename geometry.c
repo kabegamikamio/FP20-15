@@ -17,7 +17,7 @@ struct vector light = {-1000, 2000, 0};     //光源の座標
 
 //球の中心座標，半径，
 struct vector P1 = {700, 100, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
-struct vector P2 = {700, -100, 200};  double r2 = 75;   struct color c2 = {0, 0, 255};
+struct vector P2 = {700, -100, 0};  double r2 = 75;   struct color c2 = {0, 0, 255};
 
 //円を塗りつぶす関数
 //テキストからの丸コピだから不要
@@ -97,8 +97,8 @@ void sphere_hit(double r, struct vector P, struct color c){
 }
 
 void hit_test(void){
-    sphere_hit(r1, P1, c1);
     sphere_hit(r2, P2, c2);
+    sphere_hit(r1, P1, c1);
 }
 
 //ここに演習問題が入る
