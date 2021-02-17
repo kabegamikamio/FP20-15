@@ -158,7 +158,7 @@ int main(){
         }
         for(i = 0;i <= 15; i++){
             img_clear();
-            struct vector Decm = accmov(S1, S2, 15, i);
+            struct vector Decm = accmov(S2, S1, 15, i);
             P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
             P2.x = Decm.x, P2.y = Decm.y, P2.z = -Decm.z;
             hit_test();
