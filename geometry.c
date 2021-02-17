@@ -16,7 +16,7 @@ int a = -499;     //視点から画素までの距離
 struct vector light = {-1000, 2000, 0};     //光源の座標
 
 //球の中心座標，半径，
-struct vector P1 = {700, 0, 200};  double r1 = 75;   struct color c1 = {255, 0, 0};
+struct vector P1 = {700, 0, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
 struct vector P2 = {700, 0, 200};  double r2 = 75;   struct color c2 = {0, 0, 255};
 
 //円を塗りつぶす関数
@@ -37,7 +37,7 @@ void img_fillcircle(struct color c, double x, double y, double r){
 //球と視線ベクトルの交点を求める関数
 //視線ベクトルvは単位ベクトルとして与える
 struct vector sphere_hit(double r, struct vector P, struct vector v){
-    struct vector ret = {0, 0, 0};  //返す座標は(0, 0, 0)で初期化，(0, 0, 0)は交点がない時に使う
+    struct vector intersect = {0, 0, 0};  //返す座標は(0, 0, 0)で初期化，(0, 0, 0)は交点がない時に使う
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
     double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
 
@@ -51,17 +51,17 @@ struct vector sphere_hit(double r, struct vector P, struct vector v){
 
         //視点からの距離が近い方の交点だけreturnする
         if(l2 < l1){
-            ret.x = v.x * t2,
-            ret.y = v.y * t2,
-            ret.z = v.z * t2;
+            intersect.x = v.x * t2,
+            intersect.y = v.y * t2,
+            intersect.z = v.z * t2;
         }
         else if (l2 >= l1){
-            ret.x = v.x * t1,
-            ret.y = v.y * t1,
-            ret.z = v.z * t1;
+            intersect.x = v.x * t1,
+            intersect.y = v.y * t1,
+            intersect.z = v.z * t1;
         }
     }
-    return ret;
+    return intersect;
 }
 
 //光学計算を行わせる関数
@@ -72,23 +72,24 @@ void hit_test(void){
         for(j = 0; j < HEIGHT; j++){
 
             //ベクトルVは視線の方向ベクトル
-            struct vector v1 = {a, i - (WIDTH/2), j - (HEIGHT/2)};
-            struct vector V1 = normalize(v1);
-        
+            struct vector v = {a, i - (WIDTH/2), j - (HEIGHT/2)};
+            struct vector V = normalize(v);
+
             //ベクトルNは平面の法線ベクトル
             //N = (視線との交点) - (球心の位置ベクトル)
-            struct vector n01 = sphere_hit(75, P1, V1);
-            struct vector n1 = {n01.x - P1.x, n01.y - P1.y, n01.z - P1.z};
-            struct vector N1 = normalize(n1);
+            struct vector n0 = sphere_hit(r1, P1, V);
+            struct vector n = {n0.x - P1.x, n0.y - P1.y, n0.z - P1.z};
+            struct vector N = normalize(n);
 
             //ベクトルLは光線の単位ベクトル
             //L = (視線との交点) - (光源の位置ベクトル)
-            struct vector l1 = {n01.x - light.x, n01.y - light.y, n01.z - light.z};
-            struct vector L1 = normalize(l1);
+            struct vector l = {n0.x - light.x, n0.y - light.y, n0.z - light.z};
+            struct vector L = normalize(l);
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
-            if(n01.x != 0 || n01.y != 0 || n01.z != 0){
-                struct color sc = phong(N1, L1, V1, c1);          //フォンモデルで計算
+            if(n0.x != 0 || n0.y != 0 || n0.z != 0){
+                struct color sc = phong(N, L, V, c1);            //フォンモデルで計算
+                //sc = distance_ray(sc, light, n);  //自作モデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
         }
