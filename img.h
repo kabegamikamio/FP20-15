@@ -34,6 +34,7 @@ struct vector normalize(struct vector a);
 struct vector rotation(struct vector a, double theta, double phi);
 struct vector reflect(struct vector a, struct vector n);
 struct vector cross_point(struct vector p, struct vector v, struct vector q, struct vector n);
-struct vector sphere_hit(double r, struct vector P, struct vector v);
+struct vector sphere_cross(double r, struct vector P, struct vector v);
+void sphere_hit(double r, struct vector P, struct color c);
 void hit_test(void);
 struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs);

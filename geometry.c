@@ -16,8 +16,8 @@ int a = -499;     //視点から画素までの距離
 struct vector light = {-1000, 2000, 0};     //光源の座標
 
 //球の中心座標，半径，
-struct vector P1 = {700, 0, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
-struct vector P2 = {700, 0, 200};  double r2 = 75;   struct color c2 = {0, 0, 255};
+struct vector P1 = {700, 100, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
+struct vector P2 = {700, -100, 200};  double r2 = 75;   struct color c2 = {0, 0, 255};
 
 //円を塗りつぶす関数
 //テキストからの丸コピだから不要
@@ -36,7 +36,7 @@ void img_fillcircle(struct color c, double x, double y, double r){
 
 //球と視線ベクトルの交点を求める関数
 //視線ベクトルvは単位ベクトルとして与える
-struct vector sphere_hit(double r, struct vector P, struct vector v){
+struct vector sphere_cross(double r, struct vector P, struct vector v){
     struct vector intersect = {0, 0, 0};  //返す座標は(0, 0, 0)で初期化，(0, 0, 0)は交点がない時に使う
     double Pnorm2 = pow(P.x, 2) + pow(P.y, 2) + pow(P.z, 2);    //原点から点Pまでの距離の2乗
     double d = pow(P.x * v.x + P.y * v.y + P.z * v.z, 2) - (Pnorm2 - pow(r, 2)); //判別式
@@ -66,7 +66,7 @@ struct vector sphere_hit(double r, struct vector P, struct vector v){
 
 //光学計算を行わせる関数
 //実際の計算は下請け関数に任せて，呼び出しはこの関数に集約する
-void hit_test(void){
+void sphere_hit(double r, struct vector P, struct color c){
     int i, j;
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
@@ -77,8 +77,8 @@ void hit_test(void){
 
             //ベクトルNは平面の法線ベクトル
             //N = (視線との交点) - (球心の位置ベクトル)
-            struct vector n0 = sphere_hit(r1, P1, V);
-            struct vector n = {n0.x - P1.x, n0.y - P1.y, n0.z - P1.z};
+            struct vector n0 = sphere_cross(r, P, V);
+            struct vector n = {n0.x - P.x, n0.y - P.y, n0.z - P.z};
             struct vector N = normalize(n);
 
             //ベクトルLは光線の単位ベクトル
@@ -88,12 +88,17 @@ void hit_test(void){
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
             if(n0.x != 0 || n0.y != 0 || n0.z != 0){
-                struct color sc = phong(N, L, V, c1);            //フォンモデルで計算
+                struct color sc = phong(N, L, V, c);            //フォンモデルで計算
                 //sc = distance_ray(sc, light, n);  //自作モデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
         }
     }
+}
+
+void hit_test(void){
+    sphere_hit(r1, P1, c1);
+    sphere_hit(r2, P2, c2);
 }
 
 //ここに演習問題が入る
