@@ -2,8 +2,9 @@
 #include <math.h>
 #include "img.h"
 
-struct vector S = {100,0,50};
-struct vector G = {0,0,100};
+struct vector S = {700,50,50};
+struct vector G = {700,50,100};
+struct vector O = {700,0,100};
 
 struct vector accmov(struct vector S, struct vector G,float length, int frame){
     struct vector way;
