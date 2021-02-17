@@ -145,9 +145,9 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
 //野生の一般main関数
 int main(){
     int i;
-    struct vector S = {0, 0, 100};
+    struct vector S = {100, 100, 100};
     struct vector G = {0, 0, 0};
-        for(i = 0;i < 10; i++){
+        for(i = 1;i <= 10; i++){
             img_clear();
             struct vector Decm = decmov(S, G, 10, i);
             P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
