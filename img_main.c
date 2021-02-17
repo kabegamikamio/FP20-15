@@ -130,7 +130,7 @@ struct color color_range(struct int_color c0){
 struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
     double  kd = 1,     //拡散反射係数
             ks = 0.5,     //鏡面反射係数
-            ke = 0.2,     //環境反射係数
+            ke = 0.3,     //環境反射係数
             n = 10,     //鏡面反射の強度係数
             s = 1;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
@@ -145,11 +145,14 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
 //野生の一般main関数
 int main(){
     int i;
-    for(i = 0; i < 10; i++){
+    struct vector S = {0, 0, 100};
+    struct vector G = {0, 0, 0};
+        for(i = 0;i <= 10; i++){
         img_clear();
+        struct vector Decm = decmov(S, G, 10, i);
+        P1.x = Decm.x, P1.y = Decm.y, P1.z = Decm.z;
         hit_test();
         img_write();
-        P1.z -= 10 * i;
-    }
+        }
     return 0;
 }
