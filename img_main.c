@@ -146,8 +146,8 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
 int main(){
     int i;
     struct vector S = {750, 1000, 100};   //移動の始点
-    struct vector S2 = {750, 0, 100};    //移動の終点
-    struct vector O = {750, 0, 600};      
+    struct vector S1 = {750, 0, 100};    //移動の終点
+    struct vector S2 = {750, 0, 600};      
         for(i = 0;i <= 15; i++){
             img_clear();
             struct vector Decm = decmov(S, S1, 15, i);
