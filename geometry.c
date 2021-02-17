@@ -15,24 +15,9 @@
 int a = -499;     //視点から画素までの距離
 struct vector light = {-1000, 2000, 0};     //光源の座標
 
-//球の中心座標，半径，
+//球の中心座標，半径，表面の色
 struct vector P1 = {700, 100, 0};  double r1 = 75;   struct color c1 = {255, 0, 0};
 struct vector P2 = {700, -100, 0};  double r2 = 75;   struct color c2 = {0, 0, 255};
-
-//円を塗りつぶす関数
-//テキストからの丸コピだから不要
-void img_fillcircle(struct color c, double x, double y, double r){
-    int imin = (int)(x-r-1), imax = (int)(x+r+1);
-    int jmin = (int)(y-r-1), jmax = (int)(y+r+1);
-    int i, j;
-    for(j = jmin; j <= jmax; j++){
-        for(i = imin; i <= imax; i++){
-            if((x-i)*(x-i) + (y-j)*(y-j) <= r*r){
-                img_putpixel(c, i, j);
-            }
-        }
-    }
-}
 
 //球と視線ベクトルの交点を求める関数
 //視線ベクトルvは単位ベクトルとして与える
@@ -44,8 +29,11 @@ struct vector sphere_cross(double r, struct vector P, struct vector v){
     //判別式での判定
     //double型の誤差も踏まえてd = 0ではなくd >= 0としている
     if(d >= 0){
+        //tに関する二次方程式の2解
         double t1 = (v.x * P.x + v.y * P.y + v.z * P.z + sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
         double t2 = (v.x * P.x + v.y * P.y + v.z * P.z - sqrt(d)) / (v.x*v.x + v.y*v.y + v.z*v.z);
+
+        //視点から交点までの距離
         double l1 = sqrt(pow(v.x*t1, 2) + pow(v.y*t1, 2) + pow(v.z*t1, 2));
         double l2 = sqrt(pow(v.x*t2, 2) + pow(v.y*t2, 2) + pow(v.z*t2, 2));
 
@@ -63,8 +51,7 @@ struct vector sphere_cross(double r, struct vector P, struct vector v){
     return intersect;
 }
 
-//光学計算を行わせる関数
-//実際の計算は下請け関数に任せて，呼び出しはこの関数に集約する
+//sphere_crossから得られた交点情報を元にphong関数に値を受け渡し，交点があるときのみピクセルを塗る
 void sphere_hit(double r, struct vector P, struct color c){
     int i, j;
     for(i = 0; i < WIDTH; i++){
@@ -87,23 +74,28 @@ void sphere_hit(double r, struct vector P, struct color c){
 
             //視線と球の交点が(0, 0, 0)の場合は交点がないことを意味するので除外
             if(n0.x != 0 || n0.y != 0 || n0.z != 0){
-                struct color sc = phong(N, L, V, c);            //フォンモデルで計算
-                //sc = distance_ray(sc, light, n);  //自作モデルで計算
+                struct color sc = phong(N, L, V, c);    //フォンモデルで計算
                 buf[j][i][0] = sc.r, buf[j][i][1] = sc.g, buf[j][i][2] = sc.b;  //バッファにRGB値を格納
             }
         }
     }
 }
 
+//背景となる「箱」を描画する関数
 void box(void){
     int i, j;
+
+    //よく使う色の定義
     struct color gray = {100, 100, 100};
     struct color white = {255, 225, 225};
     struct color wall_color = {50, 75, 155};
     struct color green = {0, 255, 0};
     struct color ceiling_color = {51, 50, 101};
-    struct vector origin = {0, 0, 0};
+
+    struct vector origin = {0, 0, 0};   //原点
     struct vector nx = {1, 0, 0}, ny = {0, 1, 0}, nz = {0, 0, 1};   //各軸に平行な単位ベクトル．面の法線ベクトルとして使う
+    
+    //ピクセルを塗りつぶす部分
     for(i = 0; i < WIDTH; i++){
         for(j = 0; j < HEIGHT; j++){
             struct vector v = {-a, i - WIDTH/2, j - HEIGHT/2};
@@ -147,9 +139,12 @@ void box(void){
     }
 }
 
+//
 void hit_test(void){
+    box();
     sphere_hit(r2, P2, c2);
     sphere_hit(r1, P1, c1);
 }
 
 //ここに演習問題が入る
+//いや入らない

@@ -120,17 +120,18 @@ struct color color_range(struct int_color c0){
     return ret;
 }
 
-/* 
+//フォンモデルに則って描画色を決定する関数
+struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
+    /* 
     *****ベクトルは単位ベクトルとして与えること！*****
     N : 反射表面の法線ベクトル
     L : 光源の方向ベクトル
     V : 視点の方向ベクトル
     Cs : 表面の色(RGB)
-*/
-struct color phong(struct vector N, struct vector L, struct vector V, struct color Cs){
+    */
     double  kd = 1,     //拡散反射係数
-            ks = 0.5,     //鏡面反射係数
-            ke = 0.3,     //環境反射係数
+            ks = 0.5,   //鏡面反射係数
+            ke = 0.3,   //環境反射係数
             n = 10,     //鏡面反射の強度係数
             s = 1;      //入射光の強さ
     double  cosa = -1 * dot(L, N);
@@ -142,11 +143,10 @@ struct color phong(struct vector N, struct vector L, struct vector V, struct col
     return ret;
 }
 
-//野生の一般main関数
 int main(){
     int i;
-    struct vector S = {750, 50, 100};
-    struct vector G = {750, 100, 0};
+    struct vector S = {750, 50, 100};   //移動の始点
+    struct vector G = {750, 100, 0};    //移動の終点
         for(i = 0;i <= 9; i++){
             img_clear();
             struct vector Decm = decmov(S, G, 9, i);
